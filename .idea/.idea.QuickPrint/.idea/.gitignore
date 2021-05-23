@@ -1,0 +1,13 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/projectSettingsUpdater.xml
+/.idea.QuickPrint.iml
+/contentModel.xml
+# Datasource local storage ignored files
+/../../../../../../../:\Папки\Проект\QuickPrint\.idea\.idea.QuickPrint\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
