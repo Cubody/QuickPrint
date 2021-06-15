@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,24 +9,35 @@ using Random = UnityEngine.Random;
 
 public class TextMoveController : MonoBehaviour
 {
+    public GameObject scorePrefab;
     public GameObject textPrefab;
     public GameObject notePrefab;
+    public GameObject progressPrefab;
+    public GameObject finishActivity;
 
     private float _widthDelta => LayoutUtility.GetPreferredWidth(_movingText.GetComponent<RectTransform>()) /
                                  _regexRichFormatter.Replace(_textComp.text, "").Length;
-
+    
     public float pointerHeightDelta;
     public Color currentSymbolColor;
     public Color errorColor;
     private GameObject _movingText;
+    private Slider _progressBar;
     private Vector3 _movingTextPosition;
     private AudioSource _levelAudio;
     private AudioSource _errorSound;
     private AudioSource _timeOutSound;
+    private int _pressedCount;
     private readonly Regex _regexRichFormatter = new Regex(@"<\/?[a-z][a-z0-9]*[^<>]*>|<!--.*?-->");
+    private Dictionary<int, int> _steps;
+    private int _score = 0;
+    private Text _scoreText;
 
     private void Start()
     {
+        _steps = new Dictionary<int, int> {{0, 1}, {5, 2}, {10, 5}, {15, 10}, {20, 15}, {30, 20}};
+        _scoreText = scorePrefab.GetComponent<Text>();
+        _progressBar = progressPrefab.GetComponent<Slider>();
         // Получение звуковых дорожек
         _levelAudio = transform.GetChild(2).GetComponent<AudioSource>();
         _errorSound = transform.GetChild(3).GetComponent<AudioSource>();
@@ -32,13 +45,22 @@ public class TextMoveController : MonoBehaviour
         // Создание движущегося текста
         _movingText = Instantiate(textPrefab, transform);
         _textComp = _movingText.GetComponent<Text>();
+        _movingText.transform.SetSiblingIndex(transform.childCount - 2);
         _movingTextPosition = transform.GetChild(0).transform.localPosition + new Vector3(0, pointerHeightDelta) -
                               new Vector3(_widthDelta / 2, 0);
-        _movingText.transform.SetSiblingIndex(transform.childCount - 2);
         _textComp.text =
-            "Экземпляр текста для проверки ввода. Экземпляр текста для проверки ввода. Экземпляр текста для проверки ввода. Экземпляр текста для проверки ввода. Экземпляр текста для проверки ввода. Экземпляр текста для проверки ввода. Экземпляр текста для проверки ввода. Экземпляр текста для проверки ввода. ";
+            "Пока вы будете слушать нашу защиту";
         _movingText.name = "MovingText";
         MoveTextToIndex(_index);
+    }
+
+    private void OnEnable()
+    {
+        _score = 0;
+        _scoreText.text = "0";
+        _progressBar.value = 0;
+        _index = 0; 
+        MoveTextToIndex(0);
     }
 
     private int _index;
@@ -53,7 +75,10 @@ public class TextMoveController : MonoBehaviour
     {
         // Проверяем на долгий ввод
         if (_lastKeyPlayed != default && (DateTime.Now - _lastKeyPlayed).TotalSeconds >= TimeForPlay)
+        {
+            UpdateScore(true);
             StopMusic(false);
+        }
         if (!Input.anyKeyDown) return;
         // Удаляем Rich форматирование из текста регуляркой
         var check = _regexRichFormatter.Replace(_textComp.text, "");
@@ -62,14 +87,22 @@ public class TextMoveController : MonoBehaviour
         // Проверяем на соответствие ожидаемого ввода
         if (Input.inputString != check[_index].ToString())
         {
+            UpdateScore(true);
             StopMusic(true);
             return;
         }
-
+        _pressedCombo++;
+        _pressedCount++;
+        UpdateScore(false);
+        UpdateProgress(check);
+        if (_index == check.Length - 1)
+        {
+            FinishGame();
+            return;
+        }
         MoveTextToIndex(_index + 1);
         // Добавляем подряд нажатую клавишу (комбо)
-        _pressedCombo++;
-        // Проверяем, набрано ли необходимо комбо для продолжения музыки
+        // Проверяем, набрано ли необходимое комбо для продолжения музыки
         if (_pressedCombo >= NeedKeysToContinue)
         {
             _levelAudio.UnPause();
@@ -82,6 +115,23 @@ public class TextMoveController : MonoBehaviour
             _levelAudio.Play();
         _lastKeyPlayed = DateTime.Now;
         _isStopped = false;
+    }
+
+    private void FinishGame()
+    {
+        StopMusic(false);
+        finishActivity.SetActive(true);
+        finishActivity.transform.GetChild(1).GetComponent<Text>().text = _score.ToString();
+        gameObject.SetActive(false);
+    }
+
+    private void UpdateProgress(string check) =>  _progressBar.value = (float) _pressedCount / check.Length * 100;
+
+    private void UpdateScore(bool isWrong)
+    {
+        if (isWrong) _score = Math.Max(_score - 20, 0);
+        else _score += _steps.LastOrDefault(pair => _pressedCombo > pair.Key).Value;
+        _scoreText.text = _score.ToString();
     }
 
     private void StopMusic(bool isError)
@@ -122,7 +172,7 @@ public class TextMoveController : MonoBehaviour
         note.transform.GetComponent<Image>().color = errorColor;
         StartCoroutine(DeleteNoteAfterAnimation(note));
     }
-    
+
     private IEnumerator DeleteNoteAfterAnimation(GameObject note)
     {
         yield return new WaitForSecondsRealtime(1.0f);

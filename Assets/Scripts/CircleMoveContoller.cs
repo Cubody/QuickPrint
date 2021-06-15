@@ -3,16 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using static System.String;
 using Image = UnityEngine.UI.Image;
 using Random = UnityEngine.Random;
 
 public class CircleMoveContoller : MonoBehaviour
 {
+    public int needToFinish;
+    public bool useSymbol;
+    public GameObject BackActivity;
     public List<Section> sections;
     private AudioSource _levelAudio;
     private AudioSource _errorSound;
     private AudioSource _timeOutSound;
     private List<Circle> _circles;
+    private int _pressedCount;
 
     // Start is called before the first frame update
     void Start()
@@ -21,13 +27,26 @@ public class CircleMoveContoller : MonoBehaviour
         _errorSound = transform.GetChild(1).GetComponent<AudioSource>();
         _timeOutSound = transform.GetChild(2).GetComponent<AudioSource>();
 
+        CreateCircles();
+    }
+    
+    private void OnEnable()
+    {
+        CreateCircles();
+    }
+
+    void CreateCircles()
+    {
         var childs = transform.GetChild(4);
         _circles = new List<Circle>();
         for (var i = 0; i < childs.childCount; i++)
         {
             var nextSection = sections[Random.Range(0, sections.Count)];
-            _circles.Add(new Circle(nextSection.Symbols[Random.Range(0, nextSection.Symbols.Length)],
-                nextSection.color, childs.GetChild(i).gameObject));
+            _circles.Add(
+                new Circle(nextSection.color, childs.GetChild(i).gameObject,
+                    nextSection.Symbols[Random.Range(0, nextSection.Symbols.Length)].ToString().ToUpper(), useSymbol));
+            if (!useSymbol)
+                _circles[i].Label.gameObject.SetActive(false);
         }
 
         for (var i = 0; i < 3; i++)
@@ -48,9 +67,13 @@ public class CircleMoveContoller : MonoBehaviour
         if (!Input.anyKeyDown) return;
         if (Input.inputString.Trim() == "")
             return;
-        // Проверяем на соответствие ожидаемого ввода
-        if (!sections.First(x => x.color == _circles[3].Image.color).Symbols
-            .Contains(Input.inputString.ToLowerInvariant()[0]))
+        // Проверяем на соответствие ожидаемого ввода\
+        var symbol = Input.inputString.ToLowerInvariant()[0];
+        var needSymbol = _circles[3].Label.text;
+        if (useSymbol && !string.Equals(needSymbol, symbol.ToString(), StringComparison.CurrentCultureIgnoreCase) ||
+            !sections.First(x => x.color == _circles[3].Image.color)
+                .Symbols
+                .Contains(symbol))
         {
             StopMusic(true);
             return;
@@ -60,6 +83,7 @@ public class CircleMoveContoller : MonoBehaviour
         UpdateCircles();
         // Добавляем подряд нажатую клавишу (комбо)
         _pressedCombo++;
+        _pressedCount++;
         // Проверяем, набрано ли необходимо комбо для продолжения музыки
         if (_pressedCombo >= NeedKeysToContinue)
         {
@@ -79,15 +103,20 @@ public class CircleMoveContoller : MonoBehaviour
     {
         for (var i = 0; i < _circles.Count - 1; i++)
         {
-            if (!_circles[i + 1].GameObject.activeSelf) continue;
-            _circles[i].GameObject.SetActive(true);
-            _circles[i].Image.color = _circles[i + 1].Image.color;
+            var nextCircle = _circles[i + 1];
+            if (!nextCircle.GameObject.activeSelf) continue;
+            var currentCircle = _circles[i];
+            currentCircle.GameObject.SetActive(true);
+            currentCircle.Image.color = nextCircle.Image.color;
+            currentCircle.Label.text = nextCircle.Label.text;
         }
+
         var nextSection = sections[Random.Range(0, sections.Count)];
-        _circles[_circles.Count - 1].Image.color = nextSection.color;
-        _circles[_circles.Count - 1].Symbol = nextSection.Symbols[Random.Range(0, nextSection.Symbols.Length)];
+        var lastCircle = _circles[_circles.Count - 1];
+        lastCircle.Image.color = nextSection.color;
+        lastCircle.Label.text = nextSection.Symbols[Random.Range(0, nextSection.Symbols.Length)].ToString().ToUpper();
     }
-    
+
     private IEnumerator DeleteNoteAfterAnimation(GameObject note)
     {
         yield return new WaitForSecondsRealtime(1.0f);
@@ -115,17 +144,20 @@ public class CircleMoveContoller : MonoBehaviour
         _levelAudio.Pause();
     }
 
-    public class Circle
+    private class Circle
     {
-        public char Symbol;
-        public GameObject GameObject;
-        public Image Image;
+        public readonly Text Label;
+        public readonly GameObject GameObject;
+        public readonly Image Image;
 
-        public Circle(char symbol, Color color, GameObject gameObject)
+        public Circle(Color color, GameObject gameObject, string symbol, bool useSymbol)
         {
-            Symbol = symbol;
             GameObject = gameObject;
             Image = gameObject.GetComponent<Image>();
+            Label = gameObject.transform.GetChild(1).GetComponent<Text>();
+            Label.text = symbol;
+            if (useSymbol)
+                gameObject.transform.GetChild(1).gameObject.SetActive(true);
             Image.color = color;
         }
     }

@@ -2,6 +2,9 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - CircleMoveContoller
+    - OnButtonPressed
+    - OnMenuButtonInGameClick
+    - OnTraineePlayButtonClick
     - TextMoveController
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
@@ -28,11 +31,14 @@ ScriptsOnlyBuild:
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
     - UnityEngine.EventSystems.StandaloneInputModule
+    - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.ContentSizeFitter
     - UnityEngine.UI.GraphicRaycaster
+    - UnityEngine.UI.HorizontalLayoutGroup
     - UnityEngine.UI.Image
     - UnityEngine.UI.Shadow
+    - UnityEngine.UI.Slider
     - UnityEngine.UI.Text
   sceneClasses:
     Assets/Scene.unity:
@@ -67,6 +73,10 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1438}
     - Class: 114
+      Script: {instanceID: 1654}
+    - Class: 114
+      Script: {instanceID: 1666}
+    - Class: 114
       Script: {instanceID: 1684}
     - Class: 114
       Script: {instanceID: 2428}
@@ -77,11 +87,19 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 2946}
     - Class: 114
-      Script: {instanceID: 3236}
+      Script: {instanceID: 3046}
     - Class: 114
-      Script: {instanceID: 3574}
+      Script: {instanceID: 3128}
     - Class: 114
-      Script: {instanceID: 16476}
+      Script: {instanceID: 3238}
+    - Class: 114
+      Script: {instanceID: 3576}
+    - Class: 114
+      Script: {instanceID: 4400}
+    - Class: 114
+      Script: {instanceID: 35804}
+    - Class: 114
+      Script: {instanceID: 58064}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -89,6 +107,10 @@ ScriptsOnlyBuild:
     - Class: 157
       Script: {instanceID: 0}
     - Class: 196
+      Script: {instanceID: 0}
+    - Class: 198
+      Script: {instanceID: 0}
+    - Class: 199
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
@@ -359,6 +381,12 @@ ScriptsOnlyBuild:
     className: SpriteShapeController
   - hash:
       serializedVersion: 2
+      Hash: b4db71c3637b221d6af73d3a27c26b94
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CircleMoveContoller
+  - hash:
+      serializedVersion: 2
       Hash: 4fd8bf02e3089425d3502e26c44ba31a
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -431,7 +459,7 @@ ScriptsOnlyBuild:
     className: PositionAsUV1
   - hash:
       serializedVersion: 2
-      Hash: 8c3bc28d12b1330e6a31abc46bd51e32
+      Hash: de97c8950864c1d64b31c5bc3909b524
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: TextMoveController
@@ -575,6 +603,12 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
+      Hash: 8b26b62c284913ab239ae3fc900b33b8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: OnTraineePlayButtonClick
+  - hash:
+      serializedVersion: 2
       Hash: 5cc439bf63c0539d39588e69465ac2ab
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -617,10 +651,16 @@ ScriptsOnlyBuild:
     className: FabrikSolver2D
   - hash:
       serializedVersion: 2
-      Hash: 7472b9873712428f70c212e07702662f
+      Hash: 40985a03b53facc26855c71c344c850b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: CircleMoveContoller
+    className: OnMenuButtonInGameClick
+  - hash:
+      serializedVersion: 2
+      Hash: 33e3cb736094382df5bbac05f1049856
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: OnButtonPressed
   platform: 19
   scenePathNames:
   - Assets/Scene.unity
