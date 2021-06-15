@@ -10,15 +10,12 @@ using Random = UnityEngine.Random;
 
 public class CircleMoveContoller : MonoBehaviour
 {
-    public int needToFinish;
     public bool useSymbol;
-    public GameObject BackActivity;
     public List<Section> sections;
     private AudioSource _levelAudio;
     private AudioSource _errorSound;
     private AudioSource _timeOutSound;
     private List<Circle> _circles;
-    private int _pressedCount;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +30,9 @@ public class CircleMoveContoller : MonoBehaviour
     private void OnEnable()
     {
         CreateCircles();
+        _pressedCombo = 0;
+        _isStopped = false;
+        _lastKeyPlayed = DateTime.MinValue;
     }
 
     void CreateCircles()
@@ -83,7 +83,6 @@ public class CircleMoveContoller : MonoBehaviour
         UpdateCircles();
         // Добавляем подряд нажатую клавишу (комбо)
         _pressedCombo++;
-        _pressedCount++;
         // Проверяем, набрано ли необходимо комбо для продолжения музыки
         if (_pressedCombo >= NeedKeysToContinue)
         {

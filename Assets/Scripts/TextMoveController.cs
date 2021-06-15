@@ -49,13 +49,16 @@ public class TextMoveController : MonoBehaviour
         _movingTextPosition = transform.GetChild(0).transform.localPosition + new Vector3(0, pointerHeightDelta) -
                               new Vector3(_widthDelta / 2, 0);
         _textComp.text =
-            "Пока вы будете слушать нашу защиту";
+            "Пока вы будете слушать нашу защиту, эта строка будет рассказывать вам пасхалки. На изобретение этой игры ушло немного времени, но много нервов. Мало кто знает, но эта игра может претендовать на гениальность. Я только что ошибся и ударил клавиатуру 10 раз, но потом успокоился. У меня по-тихоньку кончаются идеи для бегущей строки, а зачем вы вообще ее читаете? Это что, правда, увлекательно?";
         _movingText.name = "MovingText";
         MoveTextToIndex(_index);
     }
 
     private void OnEnable()
     {
+        _pressedCount = 0;
+        _pressedCombo = 0;
+        _isStopped = false;
         _score = 0;
         _scoreText.text = "0";
         _progressBar.value = 0;

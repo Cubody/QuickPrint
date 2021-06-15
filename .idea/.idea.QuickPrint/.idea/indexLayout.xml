@@ -28,7 +28,6 @@
       <Path>Logs</Path>
       <Path>Temp</Path>
       <Path>UserSettings</Path>
-      <Path>build</Path>
       <Path>obj</Path>
     </explicitExcludes>
   </component>

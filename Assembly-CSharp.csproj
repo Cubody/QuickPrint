@@ -52,11 +52,11 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\OnMenuButtonInGameClick.cs" />
      <Compile Include="Assets\Scripts\CircleMoveContoller.cs" />
      <Compile Include="Assets\Scripts\TextMoveController.cs" />
-     <Compile Include="Assets\Scripts\OnTraineePlayButtonClick.cs" />
-     <Compile Include="Assets\Scripts\OnMenuButtonInGameClick.cs" />
      <Compile Include="Assets\Scripts\OnButtonPressed.cs" />
+     <Compile Include="Assets\Scripts\OnTraineePlayButtonClick.cs" />
  <Reference Include="UnityEngine">
  <HintPath>D:/Program Files (x86)/Unity/Hub/Editor/2020.2.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>

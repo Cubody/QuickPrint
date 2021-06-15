@@ -1549,7 +1549,6 @@ GameObject:
   - component: {fileID: 420522575}
   - component: {fileID: 420522574}
   - component: {fileID: 420522578}
-  - component: {fileID: 420522577}
   m_Layer: 5
   m_Name: Play_Button
   m_TagString: Untagged
@@ -1682,19 +1681,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 420522572}
   m_CullTransparentMesh: 1
---- !u!114 &420522577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 420522572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fd63959071886b47b0f31f00321c52f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pressedSoundPrefab: {fileID: 0}
 --- !u!114 &420522578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9991,9 +9977,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ff12b5a0af20449b6416b7a1ff343c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  needToFinish: 30
   useSymbol: 1
-  BackActivity: {fileID: 400093901}
   sections:
   - name: "\u0417\u0435\u043B\u0451\u043D\u044B\u0439"
     symbolsString: "120-=\u0439\u0437\u0445\u044A\u0444\u0436\u044D\u044F."
